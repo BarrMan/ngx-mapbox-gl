@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators/first';
 import { MapEvent, MapImageData, MapImageOptions } from './map.types';
 import { Subscription } from 'rxjs/Subscription';
+import supercluster, { Options as SuperclusterOptions, Supercluster } from 'supercluster';
 
 export const MAPBOX_API_KEY = new InjectionToken('MapboxApiKey');
 
@@ -50,6 +51,7 @@ export class MapService {
   private popupsToRemove: MapboxGl.Popup[] = [];
   private imageIdsToRemove: string[] = [];
   private subscription = new Subscription();
+  private clusterer: Supercluster;
 
   constructor(
     private zone: NgZone,
@@ -371,6 +373,17 @@ export class MapService {
       this.removePopups();
       this.removeImages();
     });
+  }
+  
+  getChildren (clusterId: number, zoom: number) {
+    if (this.clusterer) {
+      return this.clusterer.getChildren(clusterId, zoom);
+    }
+    return false;
+  }
+
+  addClusterer (clusterer: Supercluster) {
+    this.clusterer = clusterer;
   }
 
   private createMap(options: MapboxGl.MapboxOptions) {

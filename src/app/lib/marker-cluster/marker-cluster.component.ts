@@ -96,6 +96,7 @@ export class MarkerClusterComponent implements OnChanges, OnDestroy, AfterConten
         }
       });
     this.supercluster = supercluster(options);
+    this.MapService.addClusterer(this.supercluster);
     this.supercluster.load(this.data.features);
   }
 
